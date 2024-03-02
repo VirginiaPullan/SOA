@@ -1,0 +1,48 @@
+// EmailService.java
+public interface EmailService {
+    void sendEmail(Email email);
+}
+
+// EmailServiceImpl.java
+public class EmailServiceImpl implements EmailService {
+    private EmailRepository emailRepository;
+
+    public EmailServiceImpl(EmailRepository emailRepository) {
+        this.emailRepository = emailRepository;
+    }
+
+    @Override
+    public void sendEmail(Email email) {
+        System.out.println("Sending email to: " + email.getRecipient());
+        emailRepository.save(email);
+    }
+}
+
+// EmailRepository.java
+public interface EmailRepository {
+    void save(Email email);
+}
+
+// Email.java
+public class Email {
+    private String recipient;
+    private String subject;
+    private String body;
+
+    // Getters and setters
+}
+
+// EmailController.java
+public class EmailController {
+    private EmailService emailService;
+
+    public EmailController(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public ResponseEntity<Void> sendEmail(Email email) {
+        emailService.sendEmail(email);
+        return ResponseEntity.ok().build();
+    }
+}
+这个示例是一个简单的
