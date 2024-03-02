@@ -1,0 +1,98 @@
+// OrderService.java
+public interface OrderService {
+    Order getOrderById(long id);
+    List<Order> getAllOrders();
+    void createOrder(Order order);
+    void updateOrder(Order order);
+    void deleteOrder(long id);
+}
+
+// OrderServiceImpl.java
+public class OrderServiceImpl implements OrderService {
+    private OrderRepository orderRepository;
+
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    @Override
+    public Order getOrderById(long id) {
+        return orderRepository.findById(id);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public void createOrder(Order order) {
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void updateOrder(Order order) {
+        orderRepository.update(order);
+    }
+
+    @Override
+    public void deleteOrder(long id) {
+        orderRepository.delete(id);
+    }
+}
+
+// OrderRepository.java
+public interface OrderRepository {
+    Order findById(long id);
+    List<Order> findAll();
+    void save(Order order);
+    void update(Order order);
+    void delete(long id);
+}
+
+// Order.java
+public class Order {
+    private long id;
+    private String customerName;
+    private double totalAmount;
+    
+    // Getters and setters
+}
+
+// OrderController.java
+public class OrderController {
+    private OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public ResponseEntity<Order> getOrderById(long id) {
+        Order order = orderService.getOrderById(id);
+        if (order != null) {
+            return ResponseEntity.ok(order);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    public ResponseEntity<Void> createOrder(Order order) {
+        orderService.createOrder(order);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> updateOrder(long id, Order order) {
+        orderService.updateOrder(order);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> deleteOrder(long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok().build();
+    }
+}
